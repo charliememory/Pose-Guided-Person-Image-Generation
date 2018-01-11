@@ -1,7 +1,7 @@
 # Pose-Guided-Person-Image-Generation
 Testing code of NIPS 2017 paper "Pose Guided Person Image Generation"
 
-![alt text](https://github.com/charliememory/Pose-Guided-Person-Image-Generation/edit/master/imgs/Poster_task.svg)
+![alt text](https://github.com/charliememory/Pose-Guided-Person-Image-Generation/blob/master/imgs/Poster_task.svg)
 
 ## Resources
  - Pretrained models: [Market-1501](https://drive.google.com/drive/folders/1KLz9SBxOl2Djsqf3NytScPWJIf8K4Qec?usp=sharing), [DeepFashion](https://drive.google.com/drive/folders/19STFGHvwcLFasLXqqLWd-ONiTgARTukN?usp=sharing).
