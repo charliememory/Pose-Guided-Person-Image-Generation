@@ -1,10 +1,10 @@
-source ~/.bashrc_liqianma
+source ~/.bashrc
 
 ####################### Test demo test data #####################
-log_dir='/esat/diamond/liqianma/exp_logs/GAN/PG2_demo'
+log_dir=path_to_directory_of_model
 gpu=0
 D_arch='DCGAN'
-model_dir=${log_dir}'/PG2_model_DF' # model=13
+model_dir=${log_dir}'/PG2_model_DF'
 ############################
 start_step=0
 pretrained_path=${model_dir}'/model.ckpt-'${start_step}
@@ -14,7 +14,7 @@ python main.py --dataset=deepfashion_pose_onlyPosPair_128x64Pose_Mask_test_spars
              --d_lr=0.00002  --g_lr=0.00002 \
              --lr_update_step=50000 \
              --is_train=False  --test_one_by_one=True \
-             --model=13 \
+             --model=11 \
              --D_arch=${D_arch} \
              --gpu=${gpu} \
              --z_num=64 \
