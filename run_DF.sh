@@ -8,7 +8,7 @@ model_dir=${log_dir}'/PG2_model_DF'
 ############################
 start_step=0
 pretrained_path=${model_dir}'/model.ckpt-'${start_step}
-python main.py --dataset=deepfashion_pose_onlyPosPair_128x64Pose_Mask_test_sparse \
+python main.py --dataset=path_to_deepfashion_tf_data \
              --use_gpu=True --input_scale_size=128 \
              --batch_size=1 --max_step=40000 \
              --d_lr=0.00002  --g_lr=0.00002 \
