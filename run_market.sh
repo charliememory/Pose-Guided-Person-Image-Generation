@@ -1,14 +1,12 @@
-# source ~/.bashrc_liqianma
-source ~/.bashrc_liqianma
-# source /BS/sun_project2/work/mlq_project/tensorflow/bin/activate
+source ~/.bashrc
 
 ####################### Testing #####################
-log_dir='/esat/diamond/liqianma/exp_logs/GAN/PG2_demo'
+log_dir=path_to_directory_of_model
 gpu=0
 D_arch='DCGAN'
 stage=2
 
-model_dir=${log_dir}'/PG2_model' # model=3
+model_dir=${log_dir}'/PG2_model'
 start_step=0
 pretrained_path=${model_dir}'/model.ckpt-'${start_step}
 python main.py --dataset=market1501_train_attr_pose_onlyPosPair_128x64Pose_Mask_test_sparse \
@@ -17,7 +15,7 @@ python main.py --dataset=market1501_train_attr_pose_onlyPosPair_128x64Pose_Mask_
              --d_lr=0.00002  --g_lr=0.00002 \
              --lr_update_step=50000 \
              --is_train=False \
-             --model=3 \
+             --model=1 \
              --D_arch=${D_arch} \
              --gpu=${gpu} \
              --z_num=64 \
