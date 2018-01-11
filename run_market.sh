@@ -9,7 +9,7 @@ stage=2
 model_dir=${log_dir}'/PG2_model'
 start_step=0
 pretrained_path=${model_dir}'/model.ckpt-'${start_step}
-python main.py --dataset=path_to_market_tf_data \
+python main.py --dataset=data4tf_GAN_attr_pose_onlyPosPair_128x64Pose_Mask_test_sparse \
              --use_gpu=False --input_scale_size=128 \
              --batch_size=2 --max_step=40000 \
              --d_lr=0.00002  --g_lr=0.00002 \
