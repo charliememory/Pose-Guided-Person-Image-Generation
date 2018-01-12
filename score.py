@@ -13,17 +13,14 @@ import tflib
 import tflib.inception_score
 
 def l1_mean_dist(x,y):   
-    # return np.sum(np.abs(x-y))
     diff = x.astype(float)-y.astype(float)
     return np.sum(np.abs(diff))/np.product(x.shape)
 
 def l2_mean_dist(x,y):   
-    # return np.sqrt(np.sum((x-y)**2))
     diff = x.astype(float)-y.astype(float)
     return np.sqrt(np.sum(diff**2))/np.product(x.shape)
 
 # we need to set GPUno first, otherwise may out of memory
-# pdb.set_trace()
 stage = int(sys.argv[1])
 gpuNO = sys.argv[2]
 model_dir = sys.argv[3]
@@ -135,8 +132,6 @@ elif 2==stage:
     psnr_G_x = []
     L1_mean_G_x = []
     L2_mean_G_x = []
-    # x_0_255 = utils_wgan.unprocess_image(x_fixed, 127.5, 127.5)
-    # x_0_255 = x_target_list
     for i in xrange(N):
         # G1_gray = rgb2gray((G1_list[i]/127.5-1).clip(min=-1,max=1))
         # x_target_gray = rgb2gray((x_target_list[i]/127.5-1).clip(min=-1,max=1))
@@ -152,7 +147,7 @@ elif 2==stage:
         psnr_G_x.append(psnr(im_true=x_target_gray, im_test=G1_gray))        
         L1_mean_G_x.append(l1_mean_dist(G1_gray, x_target_gray))
         L2_mean_G_x.append(l2_mean_dist(G1_gray, x_target_gray))
-    # pdb.set_trace()
+        
     ssim_G1_x_mean = np.mean(ssim_G_x)
     ssim_G1_x_std = np.std(ssim_G_x)
     psnr_G1_x_mean = np.mean(psnr_G_x)
@@ -232,9 +227,3 @@ elif 2==stage:
         f.write('L2G2: %.5f +- %.5f' % (L2_G2_x_mean, L2_G2_x_std))
 
 
-
-    # f.write('ssim_std: %f  ' % ssim_G_x_std)
-    # f.write('IS_mean: %f  ' % IS_G_mean)
-    # f.write('IS_std: %f  ' % IS_G_std)
-    # f.write('psnr_mean: %f  ' % psnr_G_x_mean)
-    # f.write('psnr_std: %f' % psnr_G_x_std)
