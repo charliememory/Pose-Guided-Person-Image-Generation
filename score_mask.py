@@ -63,7 +63,6 @@ if 1==stage:
     psnr_G_x = []
     L1_mean_G_x = []
     L2_mean_G_x = []
-    # x_0_255 = utils_wgan.unprocess_image(x_fixed, 127.5, 127.5)
     x_0_255 = x_target_list
     for i in xrange(N):
         # G_gray = rgb2gray((G_list[i]/127.5-1).clip(min=-1,max=1))
@@ -104,7 +103,6 @@ if 1==stage:
     print('L2_G_x_std: %f\n' % L2_G_x_std)
 
     ##################### Inception score ##################
-    # IS_G_mean, IS_G_std = tflib.inception_score.get_inception_score(G_list)
     G_list_masked = [np.uint8(mask_target_list[i][:,:,np.newaxis]/255.*G_list[i]) for i in range(len(G_list))]
     IS_G_mean, IS_G_std = tflib.inception_score.get_inception_score(G_list_masked)
     print('IS_G_mean: %f\n' % IS_G_mean)
@@ -153,8 +151,6 @@ elif 2==stage:
     psnr_G_x = []
     L1_mean_G_x = []
     L2_mean_G_x = []
-    # x_0_255 = utils_wgan.unprocess_image(x_fixed, 127.5, 127.5)
-    # x_0_255 = x_target_list
     for i in xrange(N):
         # G1_gray = rgb2gray((G1_list[i]/127.5-1).clip(min=-1,max=1))
         # x_target_gray = rgb2gray((x_target_list[i]/127.5-1).clip(min=-1,max=1))
@@ -175,7 +171,7 @@ elif 2==stage:
         psnr_G_x.append(psnr(im_true=masked_x_target_array, im_test=masked_G1_array))
         L1_mean_G_x.append(l1_mean_dist(masked_G1_array, masked_x_target_array))
         L2_mean_G_x.append(l2_mean_dist(masked_G1_array, masked_x_target_array))
-    # pdb.set_trace()
+        
     ssim_G1_x_mean = np.mean(ssim_G_x)
     ssim_G1_x_std = np.std(ssim_G_x)
     psnr_G1_x_mean = np.mean(psnr_G_x)
@@ -198,8 +194,6 @@ elif 2==stage:
     psnr_G_x = []
     L1_mean_G_x = []
     L2_mean_G_x = []
-    # x_0_255 = utils_wgan.unprocess_image(x_fixed, 127.5, 127.5)
-    # x_0_255 = x_target_list
     for i in xrange(N):
         # G2_gray = rgb2gray((G2_list[i]/127.5-1).clip(min=-1,max=1))
         # x_target_gray = rgb2gray((x_target_list[i]/127.5-1).clip(min=-1,max=1))
@@ -241,11 +235,9 @@ elif 2==stage:
     ##################### Inception score ##################
     G1_list_masked = [np.uint8(mask_target_list[i][:,:,np.newaxis]/255.*G1_list[i]) for i in range(len(G1_list))]
     G2_list_masked = [np.uint8(mask_target_list[i][:,:,np.newaxis]/255.*G2_list[i]) for i in range(len(G2_list))]
-    # IS_G1_mean, IS_G1_std = tflib.inception_score.get_inception_score(G1_list)
     IS_G1_mean, IS_G1_std = tflib.inception_score.get_inception_score(G1_list_masked)
     print('IS_G1_mean: %f\n' % IS_G1_mean)
     print('IS_G1_std: %f\n' % IS_G1_std)
-    # IS_G2_mean, IS_G2_std = tflib.inception_score.get_inception_score(G2_list)
     IS_G2_mean, IS_G2_std = tflib.inception_score.get_inception_score(G2_list_masked)
     print('IS_G2_mean: %f\n' % IS_G2_mean)
     print('IS_G2_std: %f\n' % IS_G2_std)
@@ -263,10 +255,3 @@ elif 2==stage:
         f.write('L1G2: %.5f +- %.5f   ' % (L1_G2_x_mean, L1_G2_x_std))
         f.write('L2G2: %.5f +- %.5f' % (L2_G2_x_mean, L2_G2_x_std))
 
-
-
-    # f.write('ssim_std: %f  ' % ssim_G_x_std)
-    # f.write('IS_mean: %f  ' % IS_G_mean)
-    # f.write('IS_std: %f  ' % IS_G_std)
-    # f.write('psnr_mean: %f  ' % psnr_G_x_mean)
-    # f.write('psnr_std: %f' % psnr_G_x_std)
