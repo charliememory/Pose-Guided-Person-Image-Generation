@@ -18,5 +18,5 @@ Framework
  4. run run_market.sh or run_DF.sh 
 
 ## Related projects
-[BEGAN-tensorflow](https://github.com/carpedm20/BEGAN-tensorflow)
+[BEGAN-tensorflow](https://github.com/carpedm20/BEGAN-tensorflow), 
 [improved_wgan_training](https://github.com/igul222/improved_wgan_training)
