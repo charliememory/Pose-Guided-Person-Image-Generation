@@ -20,6 +20,19 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
 ## TODO list
 - [ ] Training and tf-record-data-preparation code
 
+## Citation
+```
+@inproceedings{DBLP:conf/nips/MaJSSTG17,
+  title={Pose Guided Person Image Generation},
+  author={Ma, Liqian and Jia, Xu and Sun, Qianru and Schiele, Bernt and Tuytelaars, Tinne and Van Gool, Luc},
+  booktitle = {Advances in Neural Information Processing Systems 30: Annual Conference
+               on Neural Information Processing Systems 2017, 4-9 December 2017,
+               Long Beach, CA, {USA}},
+  pages     = {405--415},
+  year      = {2017}
+}
+```
+
 ## Related projects
 - [BEGAN-tensorflow](https://github.com/carpedm20/BEGAN-tensorflow)
 - [improved_wgan_training](https://github.com/igul222/improved_wgan_training)
