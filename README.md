@@ -1,7 +1,10 @@
 # Pose-Guided-Person-Image-Generation
-Testing code of NIPS 2017 paper "Pose Guided Person Image Generation"
+Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generation](https://papers.nips.cc/paper/6644-pose-guided-person-image-generation.pdf)
 
 ![alt text](https://github.com/charliememory/Pose-Guided-Person-Image-Generation/blob/master/imgs/Poster_task.svg)
+
+## Network architecture
+![alt text](https://github.com/charliememory/Pose-Guided-Person-Image-Generation/blob/master/imgs/Paper-framework.svg)
 
 ## Resources
  - Pretrained models: [Market-1501](https://drive.google.com/drive/folders/1KLz9SBxOl2Djsqf3NytScPWJIf8K4Qec?usp=sharing), [DeepFashion](https://drive.google.com/drive/folders/19STFGHvwcLFasLXqqLWd-ONiTgARTukN?usp=sharing).
@@ -14,6 +17,9 @@ Testing code of NIPS 2017 paper "Pose Guided Person Image Generation"
  3. Modify the data, pretrained model path in the run_market.sh/run_DF.sh scripts.
  4. run run_market.sh or run_DF.sh 
 
+## TODO list
+- [ ] Training and tf-record-data-preparation code
+
 ## Related projects
-[BEGAN-tensorflow](https://github.com/carpedm20/BEGAN-tensorflow), 
-[improved_wgan_training](https://github.com/igul222/improved_wgan_training)
+* [BEGAN-tensorflow](https://github.com/carpedm20/BEGAN-tensorflow)
+* [improved_wgan_training](https://github.com/igul222/improved_wgan_training)
