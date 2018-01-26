@@ -21,6 +21,5 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
 - [ ] Training and tf-record-data-preparation code
 
 ## Related projects
-* [BEGAN-tensorflow](https://github.com/carpedm20/BEGAN-tensorflow)
-
-* [improved_wgan_training](https://github.com/igul222/improved_wgan_training)
+- [BEGAN-tensorflow](https://github.com/carpedm20/BEGAN-tensorflow)
+- [improved_wgan_training](https://github.com/igul222/improved_wgan_training)
