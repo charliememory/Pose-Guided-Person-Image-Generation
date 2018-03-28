@@ -9,7 +9,7 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
 ## Resources
  - Pretrained models: [Market-1501](https://drive.google.com/drive/folders/1KLz9SBxOl2Djsqf3NytScPWJIf8K4Qec?usp=sharing), [DeepFashion](https://drive.google.com/drive/folders/19STFGHvwcLFasLXqqLWd-ONiTgARTukN?usp=sharing).
  - Testing data in tf-record format: [Market-1501](https://drive.google.com/drive/folders/1XHYyAAlvn1M73-TNo59uqA8r2YNuM4kg?usp=sharing), [DeepFashion](https://drive.google.com/drive/folders/1f3skQQtsN3mj3lFeYbe8b88hsMl1cyD7?usp=sharing).
- - Filtered training/testing images: [DeepFashion](https://drive.google.com/drive/folders/0B7EVK8r0v71pVDZFQXRsMDZCX1E?usp=sharing)
+ - Filtered training/testing images: [DeepFashion](https://drive.google.com/open?id=10zkJUJBV0WQqglWIrFY_Nh1f8sQx3V9n)
 
 ## Testing steps
  1. Download the pretrained models and tf-record data.
