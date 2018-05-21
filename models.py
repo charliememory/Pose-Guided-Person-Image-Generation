@@ -187,6 +187,40 @@ def UAE_noFC_After2Noise(x, input_channel, z_num, repeat_num, hidden_num, data_f
     variables = tf.contrib.framework.get_variables(vs)
     return out, variables
 
+
+def UAE_noFC_AfterNoise(x, input_channel, z_num, repeat_num, hidden_num, data_format, activation_fn=tf.nn.elu, noise_dim=64, reuse=False):
+    with tf.variable_scope("G") as vs:
+        # Encoder
+        encoder_layer_list = []
+        x = slim.conv2d(x, hidden_num, 3, 1, activation_fn=activation_fn, data_format=data_format)
+
+        prev_channel_num = hidden_num
+        for idx in range(repeat_num):
+            channel_num = hidden_num * (idx + 1)
+            x = slim.conv2d(x, channel_num, 3, 1, activation_fn=activation_fn, data_format=data_format)
+            x = slim.conv2d(x, channel_num, 3, 1, activation_fn=activation_fn, data_format=data_format)
+            encoder_layer_list.append(x)
+            if idx < repeat_num - 1:
+                x = slim.conv2d(x, channel_num, 3, 2, activation_fn=activation_fn, data_format=data_format)
+                #x = tf.contrib.layers.max_pool2d(x, [2, 2], [2, 2], padding='VALID')
+        
+        if noise_dim>0:
+            # pdb.set_trace()
+            noise = tf.random_uniform(
+                (tf.shape(x)[0], tf.shape(x)[1], tf.shape(x)[2], noise_dim), minval=-1.0, maxval=1.0)
+            x = tf.concat([x, noise], -1)
+
+        for idx in range(repeat_num):
+            x = tf.concat([x,encoder_layer_list[-1-idx]], axis=-1)
+            x = slim.conv2d(x, hidden_num, 3, 1, activation_fn=activation_fn, data_format=data_format)
+            x = slim.conv2d(x, hidden_num, 3, 1, activation_fn=activation_fn, data_format=data_format)
+            if idx < repeat_num - 1:
+                x = upscale(x, 2, data_format)
+
+        out = slim.conv2d(x, input_channel, 3, 1, activation_fn=None, data_format=data_format)
+
+    variables = tf.contrib.framework.get_variables(vs)
+    return out, variables
     
 def GeneratorCNN_Pose_UAEAfterResidual_UAEnoFCAfter2Noise(x, pose_target, input_channel, z_num, repeat_num, hidden_num, data_format, activation_fn=tf.nn.elu, noise_dim=64, reuse=False):
     with tf.variable_scope("Pose_AE") as vs1:

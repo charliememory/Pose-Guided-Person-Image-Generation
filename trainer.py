@@ -83,7 +83,7 @@ class PG2(object):
 
         self.z_num = config.z_num
         self.conv_hidden_num = config.conv_hidden_num
-        self.input_scale_size = config.input_scale_size
+        self.img_H, self.img_W = config.img_H, config.img_W
 
         self.model_dir = config.model_dir
         self.load_path = config.load_path
@@ -118,13 +118,10 @@ class PG2(object):
         self.keypoint_num = 18
         self.D_arch = config.D_arch
         if 'market' in config.dataset.lower():
-            self.img_H, self.img_W = 128, 64
             if config.is_train:
                 self.dataset_obj = market1501.get_split('train', config.data_path)
             else:
                 self.dataset_obj = market1501.get_split('test', config.data_path)
-        else:
-            self.img_H, self.img_W = 256, 256
 
         if config.test_one_by_one:
             self.x = tf.placeholder(tf.float32, shape=(None, self.img_H, self.img_W, 3))

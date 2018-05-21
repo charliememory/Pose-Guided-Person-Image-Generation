@@ -4,7 +4,6 @@ import tensorflow as tf
 from trainer import *
 from trainer256 import *
 from config import get_config
-# from data_loader import get_loader
 from utils import prepare_dirs_and_logger, save_config
 
 import pdb, os
@@ -18,12 +17,13 @@ def main(config):
 
     config.data_format = 'NHWC'
 
-    if 1==config.model: ################### original model_idx=223  Works Best #####################
+    if 1==config.model: 
         trainer = PG2(config)
         trainer.init_net()
-    elif 11==config.model: ################### original model_idx=10208 #####################
+    elif 11==config.model:
         trainer = PG2_256(config)
         trainer.init_net()
+        
     if config.is_train:
         save_config(config)
         trainer.train()
