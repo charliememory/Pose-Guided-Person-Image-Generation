@@ -8,12 +8,13 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
 
 ## Resources
  - Pretrained models: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/models/Market1501.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/models/DF.zip).
- - Testing data in tf-record format: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/test_data_Market.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/test_data_DF.zip).
+ - Training data in tf-record format: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market_train_data.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_train_data.zip).
+ - Testing data in tf-record format: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market_test_data.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_test_data.zip).
  - Filtered training/testing images: [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_filted_up_train_test_data.zip) 
 
 ## Testing steps
  1. Download the pretrained models and tf-record data.
- 2. Move tf-record data in to ./data directory
+ 2. Unzip and move data files into ./data directory (Make sure dataset name contains 'Market' or 'DF')
  3. Modify the data, pretrained model path in the run_market.sh/run_DF.sh scripts.
  4. run run_market.sh or run_DF.sh 
 

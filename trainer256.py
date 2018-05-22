@@ -29,37 +29,73 @@ class PG2_256(PG2):
     def _gan_loss(self, wgan_gp, Discriminator, disc_real, disc_fake, arch='DCGAN'):
         if wgan_gp.MODE == 'dcgan':
             if 'DCGAN'==arch:
-                try: # tf pre-1.0 (bottom) vs 1.0 (top)
-                    gen_cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_fake,
-                                                                                      labels=tf.ones_like(disc_fake)))
-                    disc_cost =  tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_fake,
-                                                                                        labels=tf.zeros_like(disc_fake)))
-                    disc_cost += tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_real,
-                                                                                        labels=tf.ones_like(disc_real)))                    
-                except Exception as e:
-                    gen_cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(disc_fake, tf.ones_like(disc_fake)))
-                    disc_cost =  tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(disc_fake, tf.zeros_like(disc_fake)))
-                    disc_cost += tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(disc_real, tf.ones_like(disc_real)))                    
+                gen_cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_fake,
+                                                                                  labels=tf.ones_like(disc_fake)))
+                disc_cost =  tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_fake,
+                                                                                    labels=tf.zeros_like(disc_fake)))
+                disc_cost += tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_real,
+                                                                                    labels=tf.ones_like(disc_real)))                    
                 disc_cost /= 2.
         else:
             raise Exception()
         return gen_cost, disc_cost
 
+    # def build_model(self):
+    #     G1, DiffMap, self.G_var1, self.G_var2  = GeneratorCNN_Pose_UAEAfterResidual_UAEnoFCAfterNoise_256(
+    #             self.x, self.pose_target, 
+    #             self.channel, self.z_num, self.repeat_num, self.conv_hidden_num, self.data_format, activation_fn=tf.nn.relu, noise_dim=0, reuse=False)
+    #     G2 = G1 + DiffMap
+    #     self.G1 = denorm_img(G1, self.data_format)
+    #     self.G2 = denorm_img(G2, self.data_format)
+    #     self.G = self.G2
+    #     self.DiffMap = denorm_img(DiffMap, self.data_format)
+
+    #     self.wgan_gp = WGAN_GP(DATA_DIR='', MODE='dcgan', DIM=64, BATCH_SIZE=self.batch_size, ITERS=200000, LAMBDA=10, G_OUTPUT_DIM=256*256*3)
+        
+    #     Dis = self._getDiscriminator(self.wgan_gp, arch=self.D_arch)
+
+
     def build_model(self):
         G1, DiffMap, self.G_var1, self.G_var2  = GeneratorCNN_Pose_UAEAfterResidual_UAEnoFCAfterNoise_256(
                 self.x, self.pose_target, 
-                self.channel, self.z_num, self.repeat_num+1, self.conv_hidden_num, self.data_format, activation_fn=tf.nn.relu, noise_dim=0, reuse=False)
+                self.channel, self.z_num, self.repeat_num, self.conv_hidden_num, self.data_format, activation_fn=tf.nn.relu, noise_dim=0, reuse=False)
         G2 = G1 + DiffMap
         self.G1 = denorm_img(G1, self.data_format)
         self.G2 = denorm_img(G2, self.data_format)
-        self.G = self.G2
         self.DiffMap = denorm_img(DiffMap, self.data_format)
-
         self.wgan_gp = WGAN_GP(DATA_DIR='', MODE='dcgan', DIM=64, BATCH_SIZE=self.batch_size, ITERS=200000, LAMBDA=10, G_OUTPUT_DIM=256*256*3)
-        
         Dis = self._getDiscriminator(self.wgan_gp, arch=self.D_arch)
 
+        triplet = tf.concat([self.x_target, G2, self.x], 0)
 
+        ## WGAN-GP code uses NCHW
+        self.D_z = Dis(tf.transpose( triplet, [0,3,1,2] ), input_dim=3)
+        self.D_var = lib.params_with_name('Discriminator.')
+
+        D_z_pos_x_target, D_z_neg_g2, D_z_neg_x = tf.split(self.D_z, 3)
+        D_z_pos = D_z_pos_x_target
+        D_z_neg = tf.concat([D_z_neg_g2, D_z_neg_x], 0)
+
+        self.g_loss1 = tf.reduce_mean(tf.abs(G1-self.x_target))
+        self.g_loss2, self.d_loss = self._gan_loss(self.wgan_gp, Dis, D_z_pos, D_z_neg, arch=self.D_arch)
+        self.PoseMaskLoss = tf.reduce_mean(tf.abs(G2 - self.x_target) * (self.mask_target))
+        self.L1Loss2 = tf.reduce_mean(tf.abs(G2 - self.x_target)) + self.PoseMaskLoss
+        self.g_loss2 += self.L1Loss2 * 50
+
+        self.g_optim1, self.g_optim2, self.d_optim, self.clip_disc_weights = self._getOptimizer(self.wgan_gp, 
+                                self.g_loss1, self.g_loss2, self.d_loss, self.G_var1,self.G_var2, self.D_var)
+        self.summary_op = tf.summary.merge([
+            tf.summary.image("G1", self.G1),
+            tf.summary.image("G2", self.G2),
+            tf.summary.image("DiffMap", self.DiffMap),
+            tf.summary.scalar("loss/PoseMaskLoss", self.PoseMaskLoss),
+            tf.summary.scalar("loss/L1Loss2", self.L1Loss2),
+            tf.summary.scalar("loss/g_loss1", self.g_loss1),
+            tf.summary.scalar("loss/g_loss2", self.g_loss2),
+            tf.summary.scalar("loss/d_loss", self.d_loss),
+            tf.summary.scalar("misc/d_lr", self.d_lr),
+            tf.summary.scalar("misc/g_lr", self.g_lr),
+        ])
 
     def _load_batch_pair_pose(self, dataset, mode='coordSolid'):
         data_provider = slim.dataset_data_provider.DatasetDataProvider(dataset, common_queue_capacity=32, common_queue_min=8)

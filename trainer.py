@@ -165,14 +165,16 @@ class PG2(object):
             print('restored from ckpt_path:', self.ckpt_path)
 
     def _get_conv_shape(self):
-        shape = [self.batch_size, 128, 64, 3]
+        shape = [self.batch_size, self.img_H, self.img_W, 3]
         return shape
 
-    def _getOptimizer(self, wgan_gp, gen_cost, disc_cost, G_var, D_var):
+    def _getOptimizer(self, wgan_gp, gen_cost1, gen_cost2, disc_cost, G_var1, G_var2, D_var):
         clip_disc_weights = None
         if wgan_gp.MODE == 'wgan':
-            gen_train_op = tf.train.RMSPropOptimizer(learning_rate=5e-5).minimize(gen_cost,
-                                                 var_list=G_var, colocate_gradients_with_ops=True)
+            gen_train_op1 = tf.train.RMSPropOptimizer(learning_rate=5e-5).minimize(gen_cost1,
+                                                 var_list=G_var1, colocate_gradients_with_ops=True)
+            gen_train_op2 = tf.train.RMSPropOptimizer(learning_rate=5e-5).minimize(gen_cost2,
+                                                 var_list=G_var2, colocate_gradients_with_ops=True)
             disc_train_op = tf.train.RMSPropOptimizer(learning_rate=5e-5).minimize(disc_cost,
                                                  var_list=D_var, colocate_gradients_with_ops=True)
 
@@ -183,25 +185,31 @@ class PG2(object):
             clip_disc_weights = tf.group(*clip_ops)
 
         elif wgan_gp.MODE == 'wgan-gp':
-            gen_train_op = tf.train.AdamOptimizer(learning_rate=1e-4, beta1=0.5, beta2=0.9).minimize(gen_cost,
-                                              var_list=G_var, colocate_gradients_with_ops=True)
+            gen_train_op1 = tf.train.AdamOptimizer(learning_rate=1e-4, beta1=0.5, beta2=0.9).minimize(gen_cost1,
+                                              var_list=G_var1, colocate_gradients_with_ops=True)
+            gen_train_op2 = tf.train.AdamOptimizer(learning_rate=1e-4, beta1=0.5, beta2=0.9).minimize(gen_cost2,
+                                              var_list=G_var2, colocate_gradients_with_ops=True)
             disc_train_op = tf.train.AdamOptimizer(learning_rate=1e-4, beta1=0.5, beta2=0.9).minimize(disc_cost,
                                                var_list=D_var, colocate_gradients_with_ops=True)
 
         elif wgan_gp.MODE == 'dcgan':
-            gen_train_op = tf.train.AdamOptimizer(learning_rate=2e-4, beta1=0.5).minimize(gen_cost,
-                                              var_list=G_var, colocate_gradients_with_ops=True)
-            disc_train_op = tf.train.AdamOptimizer(learning_rate=2e-4, beta1=0.5).minimize(disc_cost,
+            gen_train_op1 = tf.train.AdamOptimizer(learning_rate=2e-5, beta1=0.5).minimize(gen_cost1,
+                                              var_list=G_var1, colocate_gradients_with_ops=True)
+            gen_train_op2 = tf.train.AdamOptimizer(learning_rate=2e-5, beta1=0.5).minimize(gen_cost2,
+                                              var_list=G_var2, colocate_gradients_with_ops=True)
+            disc_train_op = tf.train.AdamOptimizer(learning_rate=2e-5, beta1=0.5).minimize(disc_cost,
                                                var_list=D_var, colocate_gradients_with_ops=True)
 
         elif wgan_gp.MODE == 'lsgan':
-            gen_train_op = tf.train.RMSPropOptimizer(learning_rate=1e-4).minimize(gen_cost,
-                                                 var_list=G_var, colocate_gradients_with_ops=True)
+            gen_train_op1 = tf.train.RMSPropOptimizer(learning_rate=1e-4).minimize(gen_cost1,
+                                                 var_list=G_var1, colocate_gradients_with_ops=True)
+            gen_train_op2 = tf.train.RMSPropOptimizer(learning_rate=1e-4).minimize(gen_cost2,
+                                                 var_list=G_var2, colocate_gradients_with_ops=True)
             disc_train_op = tf.train.RMSPropOptimizer(learning_rate=1e-4).minimize(disc_cost,
                                                   var_list=D_var, colocate_gradients_with_ops=True)
         else:
             raise Exception()
-        return gen_train_op, disc_train_op, clip_disc_weights
+        return gen_train_op1, gen_train_op2, disc_train_op, clip_disc_weights
 
     def _getDiscriminator(self, wgan_gp, arch='DCGAN'):
         """
@@ -213,6 +221,20 @@ class PG2(object):
             return wgan_gp.DCGANDiscriminator
         raise Exception('You must choose an architecture!')
 
+    # def build_test_model(self):
+    #     G1, DiffMap, self.G_var1, self.G_var2  = GeneratorCNN_Pose_UAEAfterResidual_UAEnoFCAfter2Noise(
+    #             self.x, self.pose_target, 
+    #             self.channel, self.z_num, self.repeat_num, self.conv_hidden_num, self.data_format, activation_fn=tf.nn.relu, noise_dim=0, reuse=False)
+
+    #     G2 = G1 + DiffMap
+    #     self.G1 = denorm_img(G1, self.data_format)
+    #     self.G2 = denorm_img(G2, self.data_format)
+    #     self.G = self.G2
+    #     self.DiffMap = denorm_img(DiffMap, self.data_format)
+
+    #     self.wgan_gp = WGAN_GP(DATA_DIR='', MODE='dcgan', DIM=64, BATCH_SIZE=self.batch_size, ITERS=200000, LAMBDA=10, G_OUTPUT_DIM=128*64*3)
+    #     Dis = self._getDiscriminator(self.wgan_gp, arch=self.D_arch)
+
     def build_model(self):
         G1, DiffMap, self.G_var1, self.G_var2  = GeneratorCNN_Pose_UAEAfterResidual_UAEnoFCAfter2Noise(
                 self.x, self.pose_target, 
@@ -223,10 +245,113 @@ class PG2(object):
         self.G2 = denorm_img(G2, self.data_format)
         self.G = self.G2
         self.DiffMap = denorm_img(DiffMap, self.data_format)
-
         self.wgan_gp = WGAN_GP(DATA_DIR='', MODE='dcgan', DIM=64, BATCH_SIZE=self.batch_size, ITERS=200000, LAMBDA=10, G_OUTPUT_DIM=128*64*3)
+        
         Dis = self._getDiscriminator(self.wgan_gp, arch=self.D_arch)
+        triplet = tf.concat([self.x_target, self.x, G1, G2], 0)
 
+        ## WGAN-GP code uses NCHW
+        # pdb.set_trace()
+        # self.D_z = control_flow_ops.cond(
+        #           tf.equal(tf.shape(G2)[-1], 3),
+        #           lambda: Dis(tf.transpose( triplet, [0,3,1,2] ), input_dim=3),
+        #           lambda: Dis(triplet, input_dim=3))
+        self.D_z = Dis(tf.transpose( triplet, [0,3,1,2] ), input_dim=3)
+        self.D_var = lib.params_with_name('Discriminator.')
+
+        D_z_pos_x_target, D_z_neg_x, D_z_neg_g1, D_z_neg_g2 = tf.split(self.D_z, 4)
+
+        self.g_loss1 = tf.reduce_mean(tf.abs(G1-self.x_target))
+        self.g_loss2, self.d_loss, self.g2_g1_loss = self._gan_loss(self.wgan_gp, Dis, D_z_pos_x_target, D_z_neg_x, D_z_neg_g1, D_z_neg_g2, arch=self.D_arch)
+        self.PoseMaskLoss = tf.reduce_mean(tf.abs(G2 - self.x_target) * (self.mask_target))
+        self.L1Loss2 = tf.reduce_mean(tf.abs(G2 - self.x_target)) + self.PoseMaskLoss
+        self.g_loss2 += self.L1Loss2 * 10
+
+        self.g_optim1, self.g_optim2, self.d_optim, self.clip_disc_weights = self._getOptimizer(self.wgan_gp, 
+                                self.g_loss1, self.g_loss2, self.d_loss, self.G_var1,self.G_var2, self.D_var)
+        self.summary_op = tf.summary.merge([
+            tf.summary.image("G1", self.G1),
+            tf.summary.image("G2", self.G2),
+            tf.summary.image("DiffMap", self.DiffMap),
+            tf.summary.scalar("loss/PoseMaskLoss", self.PoseMaskLoss),
+            tf.summary.scalar("loss/L1Loss2", self.L1Loss2),
+            tf.summary.scalar("loss/g_loss1", self.g_loss1),
+            tf.summary.scalar("loss/g_loss2", self.g_loss2),
+            tf.summary.scalar("loss/d_loss", self.d_loss),
+            tf.summary.scalar("loss/g2_g1_loss", self.g2_g1_loss),
+            tf.summary.scalar("misc/d_lr", self.d_lr),
+            tf.summary.scalar("misc/g_lr", self.g_lr),
+        ])
+
+    def _gan_loss(self, wgan_gp, Discriminator, disc_real, disc_fake_x, disc_fake_g1, disc_fake_g2, arch='DCGAN'):
+        if wgan_gp.MODE == 'dcgan':
+            if 'DCGAN'==arch:
+                g2_g1_cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_fake_g2-disc_fake_g1, labels=tf.ones_like(disc_fake_g2-disc_fake_g1)))
+                
+                gen_cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_fake_g2, labels=tf.ones_like(disc_fake_g2)))
+                # gen_cost = 0.5*tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_fake_g2, labels=tf.ones_like(disc_fake_g2))) \
+                #             + 0.5*g2_g1_cost*10
+                # gen_cost = g2_g1_cost
+                            
+                disc_cost = 0.25*tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_fake_x, labels=tf.zeros_like(disc_fake_x))) \
+                            + 0.25*tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_fake_g2, labels=tf.zeros_like(disc_fake_g2)))
+                disc_cost += 0.5*tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=disc_real, labels=tf.ones_like(disc_real)))
+
+        return gen_cost, disc_cost, g2_g1_cost
+
+    def train(self):
+        x_fixed, x_target_fixed, pose_fixed, pose_target_fixed, mask_fixed, mask_target_fixed = self.get_image_from_loader()
+        save_image(x_fixed, '{}/x_fixed.png'.format(self.model_dir))
+        save_image(x_target_fixed, '{}/x_target_fixed.png'.format(self.model_dir))
+        save_image((np.amax(pose_fixed, axis=-1, keepdims=True)+1.0)*127.5, '{}/pose_fixed.png'.format(self.model_dir))
+        save_image((np.amax(pose_target_fixed, axis=-1, keepdims=True)+1.0)*127.5, '{}/pose_target_fixed.png'.format(self.model_dir))
+        save_image(mask_fixed, '{}/mask_fixed.png'.format(self.model_dir))
+        save_image(mask_target_fixed, '{}/mask_target_fixed.png'.format(self.model_dir))
+
+        for step in trange(self.start_step, self.max_step):
+            if step < 22000:
+                self.sess.run(self.g_optim1)
+            else:
+                # Train generator
+                if step > 0:
+                    self.sess.run(self.g_optim2)
+
+                # Train critic
+                if (self.wgan_gp.MODE == 'dcgan') or (self.wgan_gp.MODE == 'lsgan'):
+                    disc_ITERS = 1
+                else:
+                    disc_ITERS = self.wgan_gp.CRITIC_ITERS
+                for i in xrange(disc_ITERS):
+                    self.sess.run(self.d_optim)
+                    if self.wgan_gp.MODE == 'wgan':
+                        self.sess.run(self.clip_disc_weights)
+
+            fetch_dict = {}
+            if step % self.log_step == self.log_step-1:
+                fetch_dict.update({
+                    "summary": self.summary_op
+                })
+                    # "k_t": self.k_t,
+            result = self.sess.run(fetch_dict)
+
+            if step % self.log_step == self.log_step-1:
+                self.summary_writer.add_summary(result['summary'], step)
+                self.summary_writer.flush()
+
+            if step % (self.log_step * 3) == (self.log_step * 3)-1:
+                # if self.data_format == 'NCHW':
+                #     x = x_fixed.transpose([0, 3, 1, 2])
+                # else:
+                #     x = x_fixed
+                x = utils_wgan.process_image(x_fixed, 127.5, 127.5)
+                x_target = utils_wgan.process_image(x_target_fixed, 127.5, 127.5)
+                self.generate(x, x_target, pose_target_fixed, self.model_dir, idx=step)
+
+            if step % self.lr_update_step == self.lr_update_step - 1:
+                self.sess.run([self.g_lr_update, self.d_lr_update])
+
+            if step % (self.log_step * 30) == (self.log_step * 30)-1:
+                self.saver.save(self.sess, os.path.join(self.model_dir, 'model.ckpt'), global_step=step)
 
     def test(self):
         test_result_dir = os.path.join(self.model_dir, 'test_result')

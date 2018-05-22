@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Provides data for the flowers dataset.
+"""Provides data for the Market1501 dataset.
 
-The dataset scripts used to create the dataset can be found at:
+The dataset scripts used to create the dataset is modified from:
 tensorflow/models/slim/datasets/download_and_convert_flowers.py
 """
 
@@ -48,7 +48,7 @@ _ITEMS_TO_DESCRIPTIONS = {
 
 from tensorflow.python.ops import parsing_ops
 def get_split(split_name, dataset_dir, data_name='Market1501', file_pattern=None, reader=None):
-  """Gets a dataset tuple with instructions for reading flowers.
+  """Gets a dataset tuple with instructions for reading Market1501.
 
   Args:
     split_name: A train/validation split name.
@@ -88,22 +88,8 @@ def get_split(split_name, dataset_dir, data_name='Market1501', file_pattern=None
      'image_height': tf.FixedLenFeature([], tf.int64, default_value=128),
      'image_width': tf.FixedLenFeature([], tf.int64, default_value=64),
      'real_data': tf.FixedLenFeature([], tf.int64, default_value=1),
-     # 'attrs_0': tf.FixedLenFeature([27], tf.int64),
-     # 'attrs_1': tf.FixedLenFeature([27], tf.int64),
-     # 'attrs_w2v25_0': tf.FixedLenFeature([25*12], tf.float32),
-     # 'attrs_w2v25_1': tf.FixedLenFeature([25*12], tf.float32),
-     # 'attrs_w2v50_0': tf.FixedLenFeature([50*12], tf.float32),
-     # 'attrs_w2v50_1': tf.FixedLenFeature([50*12], tf.float32),
-     # 'attrs_w2v100_0': tf.FixedLenFeature([100*12], tf.float32),
-     # 'attrs_w2v100_1': tf.FixedLenFeature([100*12], tf.float32),
-     # 'attrs_w2v150_0': tf.FixedLenFeature([150*12], tf.float32),
-     # 'attrs_w2v150_1': tf.FixedLenFeature([150*12], tf.float32),
      'pose_peaks_0': tf.FixedLenFeature([16*8*18], tf.float32),
      'pose_peaks_1': tf.FixedLenFeature([16*8*18], tf.float32),
-     'pose_peaks_0_rc': tf.FixedLenFeature([18*2], tf.float32),
-     'pose_peaks_1_rc': tf.FixedLenFeature([18*2], tf.float32),
-     # 'pose_dense_r4_0': tf.FixedLenFeature([128*64*18], tf.float32),
-     # 'pose_dense_r4_1': tf.FixedLenFeature([128*64*18], tf.float32),
      'pose_mask_r4_0': tf.FixedLenFeature([128*64*1], tf.int64),
      'pose_mask_r4_1': tf.FixedLenFeature([128*64*1], tf.int64),
      
@@ -122,22 +108,8 @@ def get_split(split_name, dataset_dir, data_name='Market1501', file_pattern=None
       'label': slim.tfexample_decoder.Tensor('label'),
       'id_0': slim.tfexample_decoder.Tensor('id_0'),
       'id_1': slim.tfexample_decoder.Tensor('id_1'),
-      # 'attrs_0': slim.tfexample_decoder.Tensor('attrs_0',shape=[27]),
-      # 'attrs_1': slim.tfexample_decoder.Tensor('attrs_1',shape=[27]),
-      # 'attrs_w2v25_0': slim.tfexample_decoder.Tensor('attrs_w2v25_0',shape=[25*12]),
-      # 'attrs_w2v25_1': slim.tfexample_decoder.Tensor('attrs_w2v25_1',shape=[25*12]),
-      # 'attrs_w2v50_0': slim.tfexample_decoder.Tensor('attrs_w2v50_0',shape=[50*12]),
-      # 'attrs_w2v50_1': slim.tfexample_decoder.Tensor('attrs_w2v50_1',shape=[50*12]),
-      # 'attrs_w2v100_0': slim.tfexample_decoder.Tensor('attrs_w2v100_0',shape=[100*12]),
-      # 'attrs_w2v100_1': slim.tfexample_decoder.Tensor('attrs_w2v100_1',shape=[100*12]),
-      # 'attrs_w2v150_0': slim.tfexample_decoder.Tensor('attrs_w2v150_0',shape=[150*12]),
-      # 'attrs_w2v150_1': slim.tfexample_decoder.Tensor('attrs_w2v150_1',shape=[150*12]),
       'pose_peaks_0': slim.tfexample_decoder.Tensor('pose_peaks_0',shape=[16*8*18]),
       'pose_peaks_1': slim.tfexample_decoder.Tensor('pose_peaks_1',shape=[16*8*18]),
-      'pose_peaks_0_rc': slim.tfexample_decoder.Tensor('pose_peaks_0_rc',shape=[18*2]),
-      'pose_peaks_1_rc': slim.tfexample_decoder.Tensor('pose_peaks_1_rc',shape=[18*2]),
-      # 'pose_dense_r4_0': slim.tfexample_decoder.Tensor('pose_dense_r4_0',shape=[128*64*18]),
-      # 'pose_dense_r4_1': slim.tfexample_decoder.Tensor('pose_dense_r4_1',shape=[128*64*18]),
       'pose_mask_r4_0': slim.tfexample_decoder.Tensor('pose_mask_r4_0',shape=[128*64*1]),
       'pose_mask_r4_1': slim.tfexample_decoder.Tensor('pose_mask_r4_1',shape=[128*64*1]),
 
