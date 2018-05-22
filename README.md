@@ -17,6 +17,7 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
  2. Unzip and move data files into ./data directory (Make sure dataset name contains 'Market' or 'DF')
  3. Modify the `model_dir`, `--dataset` in the run_market_train.sh/run_DF_train.sh scripts.
  4. run run_market_train.sh/run_DF_train.sh 
+ Note: we use a triplet instead of pair real/fake for adversarial training to keep training more stable.
 
 ## Testing steps
  1. Download the pretrained models and tf-record testing data.
