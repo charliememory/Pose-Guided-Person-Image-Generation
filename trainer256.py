@@ -8,7 +8,7 @@ class PG2_256(PG2):
         self.keypoint_num = 18
         self.D_arch = config.D_arch
 
-        if 'deepfashion' in config.dataset.lower():
+        if ('deepfashion' in config.dataset.lower()) or ('df' in config.dataset.lower()):
             if config.is_train:
                 self.dataset_obj = deepfashion.get_split('train', config.data_path, data_name='DeepFashion')
             else:

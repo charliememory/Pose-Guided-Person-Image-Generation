@@ -9,8 +9,8 @@ model_dir=path_to_directory_of_model
 start_step=0
 pretrained_path=${model_dir}'/model.ckpt-'${start_step}
 
-## Make sure dataset name appear in  --dataset  (i.e. 'Market' or 'DeepFashion')
-python main.py --dataset=data4tf_Market_128x64Pose_Mask_test_sparse \
+## Make sure dataset name appear in  --dataset  (i.e. 'Market' or 'DF')
+python main.py --dataset=test_data_Market \
              --img_H=128  --img_W=64 \
              --batch_size=2 --max_step=40000 \
              --d_lr=0.00002  --g_lr=0.00002 \
