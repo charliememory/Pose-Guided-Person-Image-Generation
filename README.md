@@ -12,14 +12,20 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
  - Testing data in tf-record format: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market_test_data.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_test_data.zip).
  - Filtered training/testing images: [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_filted_up_train_test_data.zip) 
 
-## Testing steps
- 1. Download the pretrained models and tf-record data.
+## Training steps
+ 1. Download the pretrained models and tf-record training data.
  2. Unzip and move data files into ./data directory (Make sure dataset name contains 'Market' or 'DF')
- 3. Modify the data, pretrained model path in the run_market.sh/run_DF.sh scripts.
- 4. run run_market.sh or run_DF.sh 
+ 3. Modify the `model_dir`, `--dataset` in the run_market_train.sh/run_DF_train.sh scripts.
+ 4. run run_market_train.sh/run_DF_train.sh 
+
+## Testing steps
+ 1. Download the pretrained models and tf-record testing data.
+ 2. Unzip and move data files into ./data directory (Make sure dataset name contains 'Market' or 'DF')
+ 3. Modify the `model_dir`, `--dataset` in the run_market_test.sh/run_DF_test.sh scripts.
+ 4. run run_market_test.sh/run_DF_test.sh 
 
 ## TODO list
-- [ ] Training and tf-record-data-preparation code
+- [ ] tf-record-data-preparation code
 
 ## Citation
 ```
