@@ -34,14 +34,12 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
 
 ## Citation
 ```
-@inproceedings{DBLP:conf/nips/MaJSSTG17,
-  title={Pose Guided Person Image Generation},
+@inproceedings{ma2017pose,
+  title={Pose guided person image generation},
   author={Ma, Liqian and Jia, Xu and Sun, Qianru and Schiele, Bernt and Tuytelaars, Tinne and Van Gool, Luc},
-  booktitle = {Advances in Neural Information Processing Systems 30: Annual Conference
-               on Neural Information Processing Systems 2017, 4-9 December 2017,
-               Long Beach, CA, {USA}},
-  pages     = {405--415},
-  year      = {2017}
+  booktitle={Advances in Neural Information Processing Systems},
+  pages={405--415},
+  year={2017}
 }
 ```
 
