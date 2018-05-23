@@ -919,7 +919,7 @@ def run_one_pair_rec(dataset_dir, out_dir, split_name):
         # os.remove(os.path.join(out_dir, 'pn_pairs_num_train_flip.p'))
 
         _convert_dataset_one_pair_rec_withFlip(out_dir, split_name, split_name_flip, pairs, pairs_flip, labels, labels_flip, dataset_dir, 
-          attr_mat_path=None, pose_peak_path=pose_peak_path, pose_sub_path=pose_sub_path, pose_peak_path_flip=pose_peak_path_flip, pose_sub_path_flip=pose_sub_path_flip)
+          pose_peak_path=pose_peak_path, pose_sub_path=pose_sub_path, pose_peak_path_flip=pose_peak_path_flip, pose_sub_path_flip=pose_sub_path_flip)
 
         print('\nTrain convert Finished !')
 
