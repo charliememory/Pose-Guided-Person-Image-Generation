@@ -10,7 +10,7 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
  - Pretrained models: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/models/Market1501.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/models/DF.zip).
  - Training data in tf-record format: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market_train_data.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_train_data.zip).
  - Testing data in tf-record format: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market_test_data.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_test_data.zip).
- - Filtered training/testing images: [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_filted_up_train_test_data.zip) 
+ - Raw data: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market1501_img_pose_attr_seg.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_img_pose.zip) 
 
 ## TF-record data preparation steps
  You can skip this data preparation procedure if directly using the tf-record data files.

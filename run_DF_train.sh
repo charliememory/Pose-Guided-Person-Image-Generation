@@ -4,6 +4,7 @@ if [ ! -d ./data/DF_train_data ]; then
     cd data
     wget homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_train_data.zip
     unzip DF_train_data.zip
+    mv data4tf_GAN_attr_pose_onlyPosPair_256x256PoseRCV_Mask_sparse_partBbox37_maskR4R8_roi10Complete DF_train_data
     rm -f DF_train_data.zip
     cd -
 fi

@@ -4,6 +4,7 @@ if [ ! -d ./data/Market_train_data ]; then
     cd data
     wget homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market_train_data.zip
     unzip Market_train_data.zip
+    mv data4tf_GAN_attr_pose_onlyPosPair_128x64PoseRCV_Mask_sparse_Attr_partBbox7_maskR4R6 Market_train_data
     rm -f Market_train_data.zip
     cd -
 fi
