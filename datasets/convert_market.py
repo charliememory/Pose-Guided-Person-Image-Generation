@@ -209,7 +209,10 @@ def _get_train_all_pn_pairs(dataset_dir, out_dir, split_name='train', augment_ra
 
     print('save pn_pairs_num ......')
     pn_pairs_num = len(p_pairs) + len(n_pairs)
-    fpath = os.path.join(out_dir, 'pn_pairs_num_'+split_name.split('_')[0]+'.p')
+    if split_name=='train_flip':
+        fpath = os.path.join(out_dir, 'pn_pairs_num_train_flip.p')
+    else:
+        fpath = os.path.join(out_dir, 'pn_pairs_num_'+split_name.split('_')[0]+'.p')
     with open(fpath,'w') as f:
         pickle.dump(pn_pairs_num,f)
 
@@ -940,8 +943,8 @@ def run_one_pair_rec(dataset_dir, out_dir, split_name):
         random.shuffle(combined)
         pairs_flip[:], labels_flip[:] = zip(*combined)
 
-        print('os.remove pn_pairs_num_train_flip.p')
-        os.remove(os.path.join(out_dir, 'pn_pairs_num_train_flip.p'))
+        # print('os.remove pn_pairs_num_train_flip.p')
+        # os.remove(os.path.join(out_dir, 'pn_pairs_num_train_flip.p'))
         
         _convert_dataset_one_pair_rec_withFlip(out_dir, split_name, split_name_flip, pairs, pairs_flip, labels, labels_flip, dataset_dir, attr_onehot_mat_path=attr_onehot_mat_path,
             attr_w2v_dir=attr_w2v_dir, pose_peak_path=pose_peak_path, pose_sub_path=pose_sub_path, pose_peak_path_flip=pose_peak_path_flip, pose_sub_path_flip=pose_sub_path_flip)
