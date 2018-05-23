@@ -1,5 +1,13 @@
 source ~/.bashrc
 
+if [ ! -d ./data/Market_test_data ]; then
+    cd data
+    wget homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market_test_data.zip
+    unzip Market_test_data.zip
+    rm -f Market_test_data.zip
+    cd -
+fi
+
 ######################################################################
 ############################### Testing ##############################
 gpu=0

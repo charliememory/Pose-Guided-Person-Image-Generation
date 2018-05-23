@@ -1,5 +1,13 @@
 source ~/.bashrc
 
+if [ ! -d ./data/DF_train_data ]; then
+    cd data
+    wget homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_train_data.zip
+    unzip DF_train_data.zip
+    rm -f DF_train_data.zip
+    cd -
+fi
+
 
 #######################################################################
 ################################ Training #############################

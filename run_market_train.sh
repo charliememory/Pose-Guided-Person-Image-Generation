@@ -1,5 +1,13 @@
 source ~/.bashrc
 
+if [ ! -d ./data/Market_train_data ]; then
+    cd data
+    wget homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market_train_data.zip
+    unzip Market_train_data.zip
+    rm -f Market_train_data.zip
+    cd -
+fi
+
 #######################################################################
 ################################ Training #############################
 gpu=0

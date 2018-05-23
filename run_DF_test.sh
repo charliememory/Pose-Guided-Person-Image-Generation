@@ -1,5 +1,13 @@
 source ~/.bashrc
 
+if [ ! -d ./data/DF_test_data ]; then
+    cd data
+    wget homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_test_data.zip
+    unzip DF_test_data.zip
+    rm -f DF_test_data.zip
+    cd -
+fi
+
 #######################################################################
 ################################ Testing ##############################
 gpu=0
