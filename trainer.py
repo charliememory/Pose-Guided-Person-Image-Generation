@@ -16,7 +16,7 @@ from tensorflow.python.ops import control_flow_ops
 from models import *
 from utils import save_image, _getPoseMask, _getSparsePose, _sparse2dense, _get_valid_peaks
 import tflib as lib
-from wgan_gp_128x64 import *
+from wgan_gp import *
 
 def next(loader):
     return loader.next()[0].data.numpy()

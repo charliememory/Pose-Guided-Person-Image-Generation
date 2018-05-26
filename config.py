@@ -14,8 +14,8 @@ def add_argument_group(name):
 
 # Network
 net_arg = add_argument_group('Network')
-net_arg.add_argument('--input_scale_size', type=int, default=64,
-                     help='input image will be resized with the given value as width and height')
+# net_arg.add_argument('--input_scale_size', type=int, default=64,
+#                      help='input image will be resized with the given value as width and height')
 net_arg.add_argument('--img_H', type=int, default=128,
                      help='input image height')
 net_arg.add_argument('--img_W', type=int, default=64,
