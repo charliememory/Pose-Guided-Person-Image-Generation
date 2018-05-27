@@ -21,7 +21,7 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
  Note: we also provide the convert code for [Market-1501 Attribute](https://github.com/vana77/Market-1501_Attribute) and Market-1501 Segmentation results from [PSPNet](https://github.com/hszhao/PSPNet). These extra info. are provided for further research. In our experiments, pose mask are ontained from pose key-points (see `_getPoseMask` function in convert .py files).
 
 ## Training steps
- 1. Download the pretrained models and tf-record training data.
+ 1. Download the tf-record training data.
  2. Modify the `model_dir` in the run_market_train.sh/run_DF_train.sh scripts.
  3. run run_market_train.sh/run_DF_train.sh 
  
