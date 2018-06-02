@@ -473,15 +473,11 @@ def _format_data(sess, image_reader, folder_path, pairs, idx, labels, id_map, at
     # pdb.set_trace()
     if (all_peaks_dic is not None) and (pairs[idx][0] in all_peaks_dic) and (pairs[idx][1] in all_peaks_dic):
         ###### Pose 0 ######
-        # peaks = all_peaks_dic[pairs[idx][0]]
         peaks = _get_valid_peaks(all_peaks_dic[pairs[idx][0]], subsets_dic[pairs[idx][0]])
-        # print(peaks)
         indices_r4_0, values_r4_0, shape = _getSparsePose(peaks, height, width, 18, radius=4, mode='Solid')
-        # pose_dense_r4_0 = _sparse2dense(indices_r4_0, values_r4_0, shape)
         indices_r4_0, shape_0 = _oneDimSparsePose(indices_r4_0, shape)
         pose_mask_r4_0 = _getPoseMask(peaks, height, width, radius=4, mode='Solid')
         pose_mask_r7_0 = _getPoseMask(peaks, height, width, radius=7, mode='Solid')
-        # indices_r6_v4_0, values_r6_v4_0, shape = _getSparsePose(peaks, height, width, 18, radius=6, var=4, mode='Gaussian')
         for ii in range(len(peaks)):
             p = peaks[ii]
             if 0!=len(p):
@@ -496,16 +492,14 @@ def _format_data(sess, image_reader, folder_path, pairs, idx, labels, id_map, at
             return None
 
         ###### Pose 1 ######
-        # peaks = all_peaks_dic[pairs[idx][1]]
         peaks = _get_valid_peaks(all_peaks_dic[pairs[idx][1]], subsets_dic[pairs[idx][1]])
         indices_r4_1, values_r4_1, shape = _getSparsePose(peaks, height, width, 18, radius=4, mode='Solid')
-        # pose_dense_r4_1 = _sparse2dense(indices_r4_1, values_r4_1, shape)
         indices_r4_1, shape_1 = _oneDimSparsePose(indices_r4_1, shape)
         pose_mask_r4_1 = _getPoseMask(peaks, height, width, radius=4, mode='Solid')
         pose_mask_r7_1 = _getPoseMask(peaks, height, width, radius=7, mode='Solid')
-        # indices_r6_v4_1, values_r6_v4_1, shape = _getSparsePose(peaks, height, width, 18, radius=6, var=4, mode='Gaussian')
         ## Generate body region proposals
-        part_bbox_list_1, visibility_list_1 = get_part_bbox7(peaks, img_path_1, radius=7)
+        # part_bbox_list_1, visibility_list_1 = get_part_bbox7(peaks, img_path_1, radius=7)
+        part_bbox_list_1, visibility_list_1 = get_part_bbox37(peaks, img_path_0, radius=6)
         if FiltOutMissRegion and (0 in visibility_list_1):
             return None
 
@@ -556,8 +550,6 @@ def _format_data(sess, image_reader, folder_path, pairs, idx, labels, id_map, at
             'pose_peaks_1': dataset_utils.float_feature(pose_peaks_1.flatten().tolist()),
             'pose_peaks_0_rcv': dataset_utils.float_feature(pose_peaks_0_rcv.flatten().tolist()),
             'pose_peaks_1_rcv': dataset_utils.float_feature(pose_peaks_1_rcv.flatten().tolist()),
-            # 'pose_dense_r4_0': dataset_utils.int64_feature(pose_dense_r4_0.astype(np.int64).flatten().tolist()),
-            # 'pose_dense_r4_1': dataset_utils.int64_feature(pose_dense_r4_1.astype(np.int64).flatten().tolist()),
             'pose_mask_r4_0': dataset_utils.int64_feature(pose_mask_r4_0.astype(np.int64).flatten().tolist()),
             'pose_mask_r4_1': dataset_utils.int64_feature(pose_mask_r4_1.astype(np.int64).flatten().tolist()),
             'pose_mask_r6_0': dataset_utils.int64_feature(pose_mask_r7_0.astype(np.int64).flatten().tolist()),
@@ -566,11 +558,6 @@ def _format_data(sess, image_reader, folder_path, pairs, idx, labels, id_map, at
             'seg_1': dataset_utils.int64_feature(seg_1.astype(np.int64).flatten().tolist()),
 
             'shape': dataset_utils.int64_feature(shape_0),
-
-            # 'indices_r6_v4_0': dataset_utils.int64_feature(np.array(indices_r6_v4_0).astype(np.int64).flatten().tolist()),
-            # 'values_r6_v4_0': dataset_utils.float_feature(np.array(values_r6_v4_0).astype(np.float).flatten().tolist()),
-            # 'indices_r6_v4_1': dataset_utils.int64_feature(np.array(indices_r6_v4_1).astype(np.int64).flatten().tolist()),
-            # 'values_r6_v4_1': dataset_utils.float_feature(np.array(values_r6_v4_1).astype(np.float).flatten().tolist()),
             
             'indices_r4_0': dataset_utils.int64_feature(np.array(indices_r4_0).astype(np.int64).flatten().tolist()),
             'values_r4_0': dataset_utils.float_feature(np.array(values_r4_0).astype(np.float).flatten().tolist()),
