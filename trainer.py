@@ -251,20 +251,17 @@ class PG2(object):
         triplet = tf.concat([self.x_target, self.x, G1, G2], 0)
 
         ## WGAN-GP code uses NCHW
-        # pdb.set_trace()
-        # self.D_z = control_flow_ops.cond(
-        #           tf.equal(tf.shape(G2)[-1], 3),
-        #           lambda: Dis(tf.transpose( triplet, [0,3,1,2] ), input_dim=3),
-        #           lambda: Dis(triplet, input_dim=3))
         self.D_z = Dis(tf.transpose( triplet, [0,3,1,2] ), input_dim=3)
         self.D_var = lib.params_with_name('Discriminator.')
 
         D_z_pos_x_target, D_z_neg_x, D_z_neg_g1, D_z_neg_g2 = tf.split(self.D_z, 4)
 
-        self.g_loss1 = tf.reduce_mean(tf.abs(G1-self.x_target))
+        self.PoseMaskLoss1 = tf.reduce_mean(tf.abs(G1 - self.x_target) * (self.mask_target))
+        self.g_loss1 = tf.reduce_mean(tf.abs(G1-self.x_target)) + self.PoseMaskLoss1
+
         self.g_loss2, self.d_loss, self.g2_g1_loss = self._gan_loss(self.wgan_gp, Dis, D_z_pos_x_target, D_z_neg_x, D_z_neg_g1, D_z_neg_g2, arch=self.D_arch)
-        self.PoseMaskLoss = tf.reduce_mean(tf.abs(G2 - self.x_target) * (self.mask_target))
-        self.L1Loss2 = tf.reduce_mean(tf.abs(G2 - self.x_target)) + self.PoseMaskLoss
+        self.PoseMaskLoss2 = tf.reduce_mean(tf.abs(G2 - self.x_target) * (self.mask_target))
+        self.L1Loss2 = tf.reduce_mean(tf.abs(G2 - self.x_target)) + self.PoseMaskLoss2
         self.g_loss2 += self.L1Loss2 * 10
 
         self.g_optim1, self.g_optim2, self.d_optim, self.clip_disc_weights = self._getOptimizer(self.wgan_gp, 
@@ -273,7 +270,8 @@ class PG2(object):
             tf.summary.image("G1", self.G1),
             tf.summary.image("G2", self.G2),
             tf.summary.image("DiffMap", self.DiffMap),
-            tf.summary.scalar("loss/PoseMaskLoss", self.PoseMaskLoss),
+            tf.summary.scalar("loss/PoseMaskLoss1", self.PoseMaskLoss1),
+            tf.summary.scalar("loss/PoseMaskLoss2", self.PoseMaskLoss2),
             tf.summary.scalar("loss/L1Loss2", self.L1Loss2),
             tf.summary.scalar("loss/g_loss1", self.g_loss1),
             tf.summary.scalar("loss/g_loss2", self.g_loss2),

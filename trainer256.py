@@ -62,10 +62,13 @@ class PG2_256(PG2):
         D_z_pos = D_z_pos_x_target
         D_z_neg = tf.concat([D_z_neg_g2, D_z_neg_x], 0)
 
-        self.g_loss1 = tf.reduce_mean(tf.abs(G1-self.x_target))
+
+        self.PoseMaskLoss1 = tf.reduce_mean(tf.abs(G1 - self.x_target) * (self.mask_target))
+        self.g_loss1 = tf.reduce_mean(tf.abs(G1-self.x_target)) + self.PoseMaskLoss1
+
         self.g_loss2, self.d_loss = self._gan_loss(self.wgan_gp, Dis, D_z_pos, D_z_neg, arch=self.D_arch)
-        self.PoseMaskLoss = tf.reduce_mean(tf.abs(G2 - self.x_target) * (self.mask_target))
-        self.L1Loss2 = tf.reduce_mean(tf.abs(G2 - self.x_target)) + self.PoseMaskLoss
+        self.PoseMaskLoss2 = tf.reduce_mean(tf.abs(G2 - self.x_target) * (self.mask_target))
+        self.L1Loss2 = tf.reduce_mean(tf.abs(G2 - self.x_target)) + self.PoseMaskLoss2
         self.g_loss2 += self.L1Loss2 * 50
 
         self.g_optim1, self.g_optim2, self.d_optim, self.clip_disc_weights = self._getOptimizer(self.wgan_gp, 
@@ -74,7 +77,8 @@ class PG2_256(PG2):
             tf.summary.image("G1", self.G1),
             tf.summary.image("G2", self.G2),
             tf.summary.image("DiffMap", self.DiffMap),
-            tf.summary.scalar("loss/PoseMaskLoss", self.PoseMaskLoss),
+            tf.summary.scalar("loss/PoseMaskLoss1", self.PoseMaskLoss1),
+            tf.summary.scalar("loss/PoseMaskLoss2", self.PoseMaskLoss2),
             tf.summary.scalar("loss/L1Loss2", self.L1Loss2),
             tf.summary.scalar("loss/g_loss1", self.g_loss1),
             tf.summary.scalar("loss/g_loss2", self.g_loss2),
