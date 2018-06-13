@@ -8,8 +8,6 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
 
 ## Dependencies
 - python 2.7
-- cuda 9.0
-- cudnn 6.0
 - tensorflow-gpu (1.4.1)
 - numpy (1.14.0)
 - Pillow (5.0.0)
