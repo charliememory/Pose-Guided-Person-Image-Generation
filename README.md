@@ -6,6 +6,17 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
 ## Network architecture
 ![alt text](https://github.com/charliememory/Pose-Guided-Person-Image-Generation/blob/master/imgs/Paper-framework.svg)
 
+## Dependencies
+- python 2.7
+- cuda 9.0
+- cudnn 6.0
+- tensorflow-gpu (1.4.1)
+- numpy (1.14.0)
+- Pillow (5.0.0)
+- scikit-image (0.13.0)
+- scipy (1.0.1)
+- matplotlib (2.0.0)
+
 ## Resources
  - Pretrained models: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/models/Market1501_model.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/models/DF_model.zip).
  - Training data in tf-record format: [Market-1501](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/Market_train_data.zip), [DeepFashion](http://homes.esat.kuleuven.be/~liqianma/NIPS17_PG2/data/DF_train_data.zip).
