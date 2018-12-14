@@ -13,7 +13,6 @@ fi
 ################################ Training #############################
 gpu=0
 D_arch='DCGAN'
-stage=2
 
 model_dir=path_to_directory_of_model
 
