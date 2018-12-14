@@ -31,6 +31,6 @@ python main.py --dataset=DF_test_data \
              --start_step=${start_step} --pretrained_path=${pretrained_path} \
 
 ## Score
-stage=1
-python score.py ${stage} ${gpu} ${model_dir} 'test_result'
-python score_mask.py ${stage} ${gpu} ${model_dir} 'test_result'
+stage_num=1
+python score.py ${stage_num} ${gpu} ${model_dir} 'test_result'
+python score_mask.py ${stage_num} ${gpu} ${model_dir} 'test_result'
