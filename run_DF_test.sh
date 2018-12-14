@@ -13,7 +13,6 @@ fi
 ################################ Testing ##############################
 gpu=0
 D_arch='DCGAN'
-stage=2
 
 model_dir=path_to_directory_of_model
 start_step=0
@@ -32,5 +31,6 @@ python main.py --dataset=DF_test_data \
              --start_step=${start_step} --pretrained_path=${pretrained_path} \
 
 ## Score
+stage=1
 python score.py ${stage} ${gpu} ${model_dir} 'test_result'
 python score_mask.py ${stage} ${gpu} ${model_dir} 'test_result'
