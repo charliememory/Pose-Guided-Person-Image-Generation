@@ -42,6 +42,9 @@ Tensorflow implementation of NIPS 2017 paper [Pose Guided Person Image Generatio
  2. Modify the `model_dir` in the `run_market_test.sh/run_DF_test.sh scripts`.
  3. run `run_market_test.sh/run_DF_test.sh`
 
+## Other implementations
+Pytorch implementation [Human-Pose-Transfer](https://github.com/budui/Human-Pose-Transfer)
+
 ## Citation
 ```
 @inproceedings{ma2017pose,
