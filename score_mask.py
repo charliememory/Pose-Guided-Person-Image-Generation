@@ -23,7 +23,7 @@ def l2_mean_dist(x,y):
     return np.sqrt(np.sum(diff**2))/np.product(x.shape)
 
 # we need to set GPUno first, otherwise may out of memory
-stage = int(sys.argv[1])
+stage_num = int(sys.argv[1])
 gpuNO = sys.argv[2]
 model_dir = sys.argv[3]
 test_mode = sys.argv[4]
@@ -32,7 +32,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]=str(gpuNO)
 
 # pdb.set_trace()
 
-if 1==stage:
+if 1==stage_num:
     test_result_dir_x = os.path.join(model_dir, test_mode, 'x_target')
     # test_result_dir_x = os.path.join(model_dir, test_mode, 'x')
     test_result_dir_G = os.path.join(model_dir, test_mode, 'G')
@@ -115,7 +115,7 @@ if 1==stage:
         f.write('psnr: %.5f +- %.5f   ' % (psnr_G_x_mean, psnr_G_x_std))
         f.write('L1: %.5f +- %.5f   ' % (L1_G_x_mean, L1_G_x_std))
         f.write('L2: %.5f +- %.5f' % (L2_G_x_mean, L2_G_x_std))
-elif 2==stage:
+elif 2==stage_num:
     test_result_dir_x = os.path.join(model_dir, test_mode, 'x_target')
     test_result_dir_G1 = os.path.join(model_dir, test_mode, 'G1')
     test_result_dir_G2 = os.path.join(model_dir, test_mode, 'G2')
