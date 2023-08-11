@@ -60,3 +60,4 @@ Pytorch implementation [Human-Pose-Transfer](https://github.com/budui/Human-Pose
 - [BEGAN-tensorflow](https://github.com/carpedm20/BEGAN-tensorflow)
 - [improved_wgan_training](https://github.com/igul222/improved_wgan_training)
 
+Sponsered by [imgcreator.zmo.ai](https://imgcreator.zmo.ai)
